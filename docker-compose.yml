@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  nats:
+    image: nats:2.9
+    ports:
+      - "4222:4222"
+    networks:
+      - app-network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - transcription-agent
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  transcription-agent:
+    build:
+      context: ./services/transcription-agent
+    ports:
+      - "8000:8000"
+    depends_on:
+      - nats
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
