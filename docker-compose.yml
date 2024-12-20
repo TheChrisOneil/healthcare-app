@@ -6,6 +6,7 @@ services:
       - "4222:4222"
     networks:
       - app-network
+    restart: unless-stopped
 
   api-gateway:
     build:
@@ -17,6 +18,7 @@ services:
       - transcription-agent
     networks:
       - app-network
+    restart: unless-stopped
 
   frontend:
     build:
@@ -25,16 +27,23 @@ services:
       - "3000:3000"
     networks:
       - app-network
+    restart: unless-stopped
 
   transcription-agent:
     build:
       context: ./services/transcription-agent
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     depends_on:
       - nats
     networks:
       - app-network
+    volumes:
+      - ./storage/recordings:/app/storage/recordings
+      - ./storage/transcriptions:/app/storage/transcriptions
+    restart: unless-stopped
 
 networks:
   app-network:

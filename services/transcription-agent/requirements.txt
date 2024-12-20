@@ -1,3 +1,9 @@
 websockets
 nats-py
 asyncio
+boto3
+python-dotenv
+amazon-transcribe
+uuid
+datetime
+wave
